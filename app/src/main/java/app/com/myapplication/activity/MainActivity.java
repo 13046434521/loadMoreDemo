@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     private List<Integer> listData = new ArrayList<>();
     private int count = 0;
-    private int countRefresh=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,19 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getData(final String type) {
-        if ("reset".equals(type)){
-            listData.clear();
-            count = 0;
-            for (int i = 0; i < 3; i++) {
-                count += 1;
-                listData.add(count);
-            }
-        }
         if ("refresh".equals(type)) {
             listData.clear();
             count = 0;
-            countRefresh=countRefresh+1;
-            for (int i = 0; i < countRefresh+3; i++) {
+            for (int i = 0; i < 3; i++) {
                 count += 1;
                 listData.add(count);
             }
