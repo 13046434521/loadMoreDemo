@@ -2,11 +2,13 @@ package app.com.myapplication.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     private List<Integer> listData = new ArrayList<>();
     private int count = 0;
+    private int countRefresh=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,15 +80,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getData("refresh");
+        getData("reset");
     }
 
 
     private void getData(final String type) {
+        if ("reset".equals(type)){
+            listData.clear();
+            count = 0;
+            for (int i = 0; i < 3; i++) {
+                count += 1;
+                listData.add(count);
+            }
+        }
         if ("refresh".equals(type)) {
             listData.clear();
             count = 0;
-            for (int i = 0; i < 13; i++) {
+            countRefresh=countRefresh+1;
+            for (int i = 0; i < countRefresh+3; i++) {
                 count += 1;
                 listData.add(count);
             }
@@ -136,12 +148,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             if (getItemViewType(position)==TYPE_FOOTER){
-
             }
             else{
                 MyViewHolder viewHolder= (MyViewHolder) holder;
                 viewHolder.textView.setText("第" + position + "行");
             }
+            layoutManager.getChildCount();
+            layoutManager.getItemCount();
+            layoutManager.findLastVisibleItemPosition();
         }
 
 
@@ -160,8 +174,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class FootViewHolder extends RecyclerView.ViewHolder{
+       ContentLoadingProgressBar contentLoadingProgressBar;
         public FootViewHolder(View itemView) {
             super(itemView);
+            contentLoadingProgressBar=itemView.findViewById(R.id.pb_progress);
         }
     }
 }
