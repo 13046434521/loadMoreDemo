@@ -2,7 +2,6 @@ package app.com.myapplication;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
@@ -13,10 +12,11 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
  * @说明：加载更多接口
  */
 
-public abstract class onLoadMoreListener extends RecyclerView.OnScrollListener {
+public abstract class OnLoadMoreListener extends RecyclerView.OnScrollListener {
     private int countItem;
     private int lastItem;
-    private boolean isScolled = false;//是否可以滑动
+    private boolean isScrolled = false;//是否可以滑动
+    private boolean isAllScreen = false;//是否充满全屏
     private RecyclerView.LayoutManager layoutManager;
 
     /**
@@ -43,9 +43,10 @@ public abstract class onLoadMoreListener extends RecyclerView.OnScrollListener {
         }*/
         //拖拽或者惯性滑动时isScolled设置为true
         if (newState == SCROLL_STATE_DRAGGING || newState == SCROLL_STATE_SETTLING) {
-            isScolled = true;
+            isScrolled = true;
+            isAllScreen =true;
         } else {
-            isScolled = false;
+            isScrolled = false;
         }
 
     }
@@ -57,8 +58,12 @@ public abstract class onLoadMoreListener extends RecyclerView.OnScrollListener {
             countItem = layoutManager.getItemCount();
             lastItem = ((LinearLayoutManager) layoutManager).findLastCompletelyVisibleItemPosition();
         }
-        if (isScolled && countItem != lastItem && lastItem == countItem - 1) {
+        if (isScrolled && countItem != lastItem && lastItem == countItem - 1) {
             onLoading(countItem, lastItem);
         }
+    }
+
+    public boolean isAllScreen(){
+        return isAllScreen;
     }
 }
